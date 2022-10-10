@@ -1,9 +1,16 @@
 import { Component,OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { HighchartService } from '../highchart.service';
-let Highcharts = require('highcharts');  
-require('highcharts/modules/exporting')(Highcharts);
-require('highcharts/highcharts-more')(Highcharts);
+// let Highcharts = require('highcharts');  
+import * as Highcharts from 'highcharts';
+// require('highcharts/modules/exporting')(Highcharts);
+// Load the exporting module.
+import Exporting from 'highcharts/modules/exporting';
+// require('highcharts/highcharts-more')(Highcharts);
+
+// Initialize exporting module.
+Exporting(Highcharts);
+
 
 export enum DatePickerType{
   Debut = '000000',
@@ -36,7 +43,7 @@ export class Chart1Component implements OnInit {
         consoData[0],
         consoData[1]
       );
-      this.updateChart2(this.consoChartInput, 'updated chart');
+      // this.updateChart2(this.consoChartInput, 'updated chart');
     });
   }
 
@@ -60,6 +67,7 @@ export class Chart1Component implements OnInit {
         renderTo: 'chart2',
         type: 'spline',
         zoomType: 'xy',
+        // styledMode: true
       },
       xAxis: [
         {
@@ -90,8 +98,9 @@ export class Chart1Component implements OnInit {
           title: {
             text: 'Ecart Temperature',
           },
-          min: -20,
-          max: 20,
+          min: -5,
+          max: 5,
+          
         },
         {
           // yAxis secondaire
@@ -120,6 +129,44 @@ export class Chart1Component implements OnInit {
           data: [],
         },
       ],
+      credits: {
+        enabled: false
+    },
+    exporting: {
+      buttons: {
+          contextButton: {
+            enabled :false
+            // text:'Export'
+              // menuItems: ['downloadPNG', 'downloadSVG', 'separator', 'label']
+          },
+          exportButton: {
+            text:'Export',
+            theme: {
+              fill: '#ddd',
+              stroke: '#888',
+              states: {
+                  hover: {
+                      fill: '#fca',
+                      stroke: '#888'
+                  },
+                  select: {
+                      fill: '#ddd',
+                      stroke: '#888'
+                  }
+              }
+          },
+            menuItems: [
+              'viewFullscreen',
+              'printChart',
+              'separator',
+              'downloadPNG',
+              'downloadJPEG',
+              'downloadPDF',
+              'downloadSVG'
+          ]
+          }
+      }
+  }
     };
     this.chart2 = new Highcharts.Chart(this.options2);
   }
@@ -136,7 +183,7 @@ export class Chart1Component implements OnInit {
       data: data,
     });
 
-    chart2bUpdated = this.Highcharts.chart(chartId, chartOptions);
+    // chart2bUpdated = this.Highcharts.chart(chartId, chartOptions);
   }
 
   updateChart2(_data: any, courbeName: string) {
